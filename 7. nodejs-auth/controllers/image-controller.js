@@ -101,7 +101,18 @@ const deleteImageController = async (req, res) => {
     await cloudinary.uploader.destroy(image.publicId);
 
     //delete this image from mongodb database
-    await Image.findByIdAndUpdate(getCurrentIdOfImageToBeDeleted);
+    // await Image.findByIdAndUpdate(getCurrentIdOfImageToBeDeleted);
+
+// I noticed that this line is using findByIdAndUpdate:
+// await Image.findByIdAndUpdate(getCurrentIdOfImageToBeDeleted);
+// Since the intention here is to delete the image, it would be more appropriate to use:
+// findByIdAndUpdate won’t remove the document unless specific update logic is provided, so this might not behave as expected.
+// https://www.linkedin.com/in/gullapalli-jyothiprakash/
+await Image.findByIdAndDelete(getCurrentIdOfImageToBeDeleted);
+
+
+
+
 
     res.status(200).json({
       success: true,
